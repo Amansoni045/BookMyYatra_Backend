@@ -22,6 +22,6 @@ model Hotel {
   price       Int
   tag         String?
   maxGuests   Int
-  description String
-  services    String
+  description String  @db.Text
+  services    String  @db.Text
 }
