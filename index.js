@@ -27,7 +27,6 @@ app.get('/hotels', async (req, res) => {
     }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`✅ Server is running on PORT:- ${PORT}`);
   console.log(`👉 http://localhost:${PORT}`);
