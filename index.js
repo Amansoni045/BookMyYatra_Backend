@@ -12,9 +12,8 @@ app.use(express.json());
 const PORT = process.env.PORT;
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.status(200).send('Backend is running');
 });
-
 
 app.get('/hotels', async (req, res) => {
     try {
