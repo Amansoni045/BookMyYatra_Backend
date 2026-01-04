@@ -13,7 +13,9 @@ const signup = async (req, res) => {
     }
 
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { 
+        email 
+      },
     });
 
     if (existingUser) {
@@ -44,4 +46,46 @@ const signup = async (req, res) => {
   }
 };
 
-module.exports = { signup };
+
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password required" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { 
+        email 
+    },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    generateToken(res, user.id);
+
+    res.status(200).json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
+  } 
+  catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+
+module.exports = { signup,login };
