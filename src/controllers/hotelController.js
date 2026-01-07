@@ -1,22 +1,32 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-getHotels = async (req, res) => {
-    const hotels = await prisma.hotel.findMany();
-    res.json(hotels);
+exports.getHotels = async (_, res) => {
+  res.json(await prisma.hotel.findMany());
 };
 
-getHotelById = async (req, res) => {
-    const hotel = await prisma.hotel.findUnique({
-        where: {
-            id: Number(req.params.id)
-        },
-    });
-
-    if (!hotel) {
-        return res.status(404).json({ message: "Hotel not found" })
-    };
-    res.json(hotel);
+exports.getHotelById = async (req, res) => {
+  const hotel = await prisma.hotel.findUnique({
+    where: { id: Number(req.params.id) },
+  });
+  if (!hotel) return res.status(404).json({ message: "Not found" });
+  res.json(hotel);
 };
 
-module.exports = { getHotels, getHotelById };
+exports.createHotel = async (req, res) => {
+  res.status(201).json(await prisma.hotel.create({ data: req.body }));
+};
+
+exports.updateHotel = async (req, res) => {
+  res.json(
+    await prisma.hotel.update({
+      where: { id: Number(req.params.id) },
+      data: req.body,
+    })
+  );
+};
+
+exports.deleteHotel = async (req, res) => {
+  await prisma.hotel.delete({ where: { id: Number(req.params.id) } });
+  res.json({ message: "Deleted" });
+};

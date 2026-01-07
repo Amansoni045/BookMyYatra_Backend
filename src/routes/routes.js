@@ -1,16 +1,22 @@
 const express = require("express");
 const router = express.Router();
 
-const { signup,login,me,logout } = require("../controllers/authController");
-const { getHotels, getHotelById } = require("../controllers/hotelController");
-const authMiddleware = require("../middlewares/middleware");
+const auth = require("../middlewares/authMiddleware");
+const admin = require("../middlewares/adminMiddleware");
 
-router.post("/signup", signup);
-router.post("/login", login);
-router.get("/me", authMiddleware, me);
-router.post("/logout", authMiddleware, logout);
+const hotel = require("../controllers/hotelController");
+const authCtrl = require("../controllers/authController");
 
-router.get("/hotels", getHotels);
-router.get("/hotels/:id", getHotelById);
+router.post("/signup", authCtrl.signup);
+router.post("/login", authCtrl.login);
+router.get("/me", auth, authCtrl.me);
+router.post("/logout", auth, authCtrl.logout);
+
+router.get("/hotels", hotel.getHotels);
+router.get("/hotels/:id", hotel.getHotelById);
+
+router.post("/admin/hotels", auth, admin, hotel.createHotel);
+router.put("/admin/hotels/:id", auth, admin, hotel.updateHotel);
+router.delete("/admin/hotels/:id", auth, admin, hotel.deleteHotel);
 
 module.exports = router;

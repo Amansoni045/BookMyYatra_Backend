@@ -18,12 +18,13 @@ model User {
   name      String
   email     String   @unique
   password  String
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
 }
 
 
 model Hotel {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   location    String
   image       String
@@ -33,4 +34,10 @@ model Hotel {
   maxGuests   Int
   description String  @db.Text
   services    String  @db.Text
+  createdAt   DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
 }
