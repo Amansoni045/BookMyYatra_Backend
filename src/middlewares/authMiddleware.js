@@ -11,6 +11,7 @@ const protect = async (req, res, next) => {
   }
 
   if (!token) {
+    console.log("token not found")
     return res.status(401).json({ message: "Not authorized" });
   }
 
@@ -18,7 +19,7 @@ const protect = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
+      where: { id: decoded.userId },
       select: {
         id: true,
         name: true,
