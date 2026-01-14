@@ -3,23 +3,18 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const protect = async (req, res, next) => {
-  let token;
-
-  if (req.cookies && req.cookies.token) {
-    token = req.cookies.token;
-  }
-
-  if (!token) {
-    console.log("token not found")
-    return res.status(401).json({ message: "Not authorized" });
-  }
-
+const auth = async (req, res, next) => {
   try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+      where: { id: decoded.id },
       select: {
         id: true,
         name: true,
@@ -35,8 +30,9 @@ const protect = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
+    console.error("Auth error:", error);
+    res.status(401).json({ message: "Invalid token" });
   }
 };
 
-module.exports = protect;
+module.exports = auth;

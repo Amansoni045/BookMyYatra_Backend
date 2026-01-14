@@ -1,8 +1,8 @@
-const adminMiddleware = (req, res, next) => {
+const admin = (req, res, next) => {
   if (req.user.role !== "ADMIN") {
-    return res.status(403).json({ message: "Admin access only" });
+    return res.status(403).json({ message: "Admin access denied" });
   }
   next();
 };
 
-module.exports = adminMiddleware;
+module.exports = admin;
