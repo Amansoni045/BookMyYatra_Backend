@@ -14,7 +14,6 @@ app.use(
     origin: [
       process.env.FRONTEND_LOCAL_URL,
       process.env.FRONTEND_DEPLOYED_URL,
-      "http://localhost:3000",
     ].filter(Boolean),
     credentials: true,
   })
