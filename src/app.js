@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const routes = require("./routes/routes");
@@ -8,7 +7,6 @@ const routes = require("./routes/routes");
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser());
 
 app.use(
   cors({
@@ -16,7 +14,6 @@ app.use(
       process.env.FRONTEND_LOCAL_URL,
       process.env.FRONTEND_DEPLOYED_URL,
     ],
-    credentials: true,
   })
 );
 

@@ -23,13 +23,14 @@ const signup = async (req, res) => {
             data: { name, email, password: hashedPassword },
         });
 
-        generateToken(res, user.id);
+        const token = generateToken(user.id);
 
         res.status(201).json({
             id: user.id,
             name: user.name,
             email: user.email,
             role: user.role,
+            token,
         });
     } catch (error) {
         console.error("Signup error:", error);
@@ -51,13 +52,14 @@ const login = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        generateToken(res, user.id);
+        const token = generateToken(user.id);
 
         res.status(200).json({
             id: user.id,
             name: user.name,
             email: user.email,
             role: user.role,
+            token,
         });
     } catch (error) {
         console.error("Login error:", error);
@@ -70,13 +72,7 @@ const me = (req, res) => {
 };
 
 const logout = (req, res) => {
-    res.cookie("token", "", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        expires: new Date(0),
-    });
-
+    // Client-side will handle token removal
     res.status(200).json({ message: "Logged out successfully" });
 };
 
