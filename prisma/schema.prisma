@@ -33,7 +33,7 @@ model Hotel {
   tag         String?
   maxGuests   Int
   description String  @db.Text
-  services    String  @db.Text
+  services    String?  @db.Text
   createdAt   DateTime @default(now())
 }
 

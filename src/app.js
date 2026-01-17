@@ -14,6 +14,7 @@ app.use(
       process.env.FRONTEND_LOCAL_URL,
       process.env.FRONTEND_DEPLOYED_URL,
     ],
+    credentials: true,
   })
 );
 
