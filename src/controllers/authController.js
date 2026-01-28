@@ -72,7 +72,6 @@ const me = (req, res) => {
 };
 
 const logout = (req, res) => {
-    // Client-side will handle token removal
     res.status(200).json({ message: "Logged out successfully" });
 };
 

@@ -7,6 +7,8 @@ const admin = require("../middlewares/adminMiddleware");
 const hotel = require("../controllers/hotelController");
 const authCtrl = require("../controllers/authController");
 
+const notificationRoutes = require("./notificationRoutes");
+
 router.post("/signup", authCtrl.signup);
 router.post("/login", authCtrl.login);
 router.get("/me", auth, authCtrl.me);
@@ -18,5 +20,7 @@ router.get("/hotels/:id", hotel.getHotelById);
 router.post("/admin/hotels", auth, admin, hotel.createHotel);
 router.put("/admin/hotels/:id", auth, admin, hotel.updateHotel);
 router.delete("/admin/hotels/:id", auth, admin, hotel.deleteHotel);
+
+router.use("/notifications", notificationRoutes);
 
 module.exports = router;
