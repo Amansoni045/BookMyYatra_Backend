@@ -14,17 +14,18 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  bookings  Booking[]
 }
 
 
 model Hotel {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   location    String
   image       String
@@ -32,12 +33,57 @@ model Hotel {
   price       Int
   tag         String?
   maxGuests   Int
-  description String  @db.Text
-  services    String?  @db.Text
+  description String    @db.Text
+  services    String?   @db.Text
+  createdAt   DateTime  @default(now())
+  bookings    Booking[]
+}
+
+model Booking {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  
+  serviceType ServiceType  @default(HOTEL)
+  
+  // Polymorphic Relations
+  hotelId     Int?
+  hotel       Hotel?       @relation(fields: [hotelId], references: [id])
+  
+  // Example for future:
+  // flightId Int?
+  // cartId   Int?
+
+  checkIn     DateTime?
+  checkOut    DateTime?
+  guests      Int?
+  
+  totalAmount Int
+  paymentId   String?  
+  status      BookingStatus @default(PENDING) 
+  
+  // Generic metadata bucket for specific vertical data (e.g., flight seat numbers, bus ticket paths)
+  metaData    Json?
+
   createdAt   DateTime @default(now())
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+enum ServiceType {
+  HOTEL
+  FLIGHT
+  BUS
+  CAB
+  TRAIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  FAILED
 }
