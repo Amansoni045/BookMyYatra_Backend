@@ -6,12 +6,26 @@ exports.getHotels = async (req, res) => {
     const { location, tag, minPrice, maxPrice, limit = 50 } = req.query;
 
     const where = {};
-    if (location) where.location = { contains: location, mode: 'insensitive' };
-    if (tag) where.tag = { contains: tag, mode: 'insensitive' };
+    if (location) {
+      where.location = {
+        contains: location,
+        mode: 'insensitive'
+      };
+    }
+    if (tag) {
+      where.tag = {
+        contains: tag,
+        mode: 'insensitive'
+      };
+    }
     if (minPrice || maxPrice) {
       where.price = {};
-      if (minPrice) where.price.gte = Number(minPrice);
-      if (maxPrice) where.price.lte = Number(maxPrice);
+      if (minPrice) {
+        where.price.gte = Number(minPrice);
+      }
+      if (maxPrice) {
+        where.price.lte = Number(maxPrice);
+      }
     }
 
     const hotels = await prisma.hotel.findMany({

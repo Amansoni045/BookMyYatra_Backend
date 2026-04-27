@@ -17,7 +17,6 @@ exports.createOrder = async (req, res) => {
       return res.status(401).json({ error: "User not authenticated or user id not found" });
     }
 
-// 1. Create Razorpay order (Simulation if no real keys present)
     let order;
     if (!process.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID.includes("DUMMY")) {
       console.log("⚠️ Using mocked Razorpay Order due to missing production keys.");
@@ -28,7 +27,7 @@ exports.createOrder = async (req, res) => {
       };
     } else {
       const options = {
-        amount: amount * 100, // amount in smallest currency unit (paise)
+        amount: amount * 100, 
         currency: "INR",
         receipt: `receipt_order_${Math.floor(Math.random() * 1000)}`,
       };
@@ -39,7 +38,6 @@ exports.createOrder = async (req, res) => {
       return res.status(500).json({ error: "Failed to create order" });
     }
 
-    // 2. Create unconfirmed booking in DB
     const newBooking = await prisma.booking.create({
       data: {
         userId,
@@ -72,7 +70,6 @@ exports.verifyPayment = async (req, res) => {
       .digest("hex");
 
     if (razorpay_signature === expectedSign || razorpay_signature === "mocked_signature") {
-      // Payment successful, update booking status
       await prisma.booking.updateMany({
         where: { paymentId: razorpay_order_id },
         data: { status: "CONFIRMED" },
@@ -80,7 +77,6 @@ exports.verifyPayment = async (req, res) => {
 
       return res.status(200).json({ message: "Payment verified successfully" });
     } else {
-      // Payment failed
       await prisma.booking.updateMany({
         where: { paymentId: razorpay_order_id },
         data: { status: "FAILED" },
